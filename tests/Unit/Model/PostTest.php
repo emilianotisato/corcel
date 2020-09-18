@@ -3,18 +3,19 @@
 namespace Corcel\Tests\Unit\Model;
 
 use Carbon\Carbon;
-use Corcel\Model\Collection\MetaCollection;
+use Corcel\Shortcode;
 use Corcel\Model\Page;
 use Corcel\Model\Post;
-use Corcel\Model\Taxonomy;
 use Corcel\Model\Term;
 use Corcel\Model\User;
-use Corcel\Shortcode;
+use Corcel\Model\Taxonomy;
 use Illuminate\Support\Arr;
+use Illuminate\Pagination\Paginator;
+use Corcel\Model\Collection\MetaCollection;
 use Thunder\Shortcode\Shortcode\ShortcodeInterface;
 
 /**
- * Class PostTest
+ * Class PostTest.
  *
  * @author Junior Grossi <juniorgro@gmail.com>
  */
@@ -280,6 +281,7 @@ class PostTest extends \Corcel\Tests\TestCase
 
     public function test_it_can_be_paginated()
     {
+        Paginator::useBootstrap();
         $post = factory(Post::class)->create();
         factory(Post::class)->create();
         factory(Post::class)->create();
@@ -295,7 +297,7 @@ class PostTest extends \Corcel\Tests\TestCase
         $this->assertEquals($post->post_title, $firstPost->post_title);
         $this->assertRegExp('/\<nav\>\s*\<ul class="pagination/', $paginator->toHtml());
     }
-    
+
     public function test_it_can_have_taxonomy()
     {
         $post = $this->createPostWithTaxonomiesAndTerms();
@@ -548,7 +550,7 @@ class PostTest extends \Corcel\Tests\TestCase
         $this->assertEquals($expectedMultipleWordQuery, $multipleWord->toSql());
     }
 
-    private function createPostWithTaxonomiesAndTerms(): Post
+    private function createPostWithTaxonomiesAndTerms() : Post
     {
         $post = factory(Post::class)->create();
 
@@ -564,7 +566,7 @@ class PostTest extends \Corcel\Tests\TestCase
         return $post;
     }
 
-    private function createPostWithAuthor(): Post
+    private function createPostWithAuthor() : Post
     {
         $post = factory(Post::class)->create();
 
@@ -575,7 +577,7 @@ class PostTest extends \Corcel\Tests\TestCase
         return $post;
     }
 
-    private function registerFooShortcode(): void
+    private function registerFooShortcode() : void
     {
         Post::addShortcode('foo', function (ShortcodeInterface $shortcode) {
             return sprintf(
@@ -587,7 +589,7 @@ class PostTest extends \Corcel\Tests\TestCase
         });
     }
 
-    private function createPostWithPostFormatTaxonomy(): Post
+    private function createPostWithPostFormatTaxonomy() : Post
     {
         $post = factory(Post::class)->create();
 
@@ -612,7 +614,7 @@ class PostTest extends \Corcel\Tests\TestCase
 
 class FakeShortcode implements Shortcode
 {
-    public function render(ShortcodeInterface $shortcode): string
+    public function render(ShortcodeInterface $shortcode) : string
     {
         return sprintf(
             'html-for-shortcode-%s-%s',
